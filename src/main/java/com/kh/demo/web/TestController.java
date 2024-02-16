@@ -65,4 +65,10 @@ public class TestController {
     model.addAttribute("persons",persons);
     return "test/test1";
   }
+
+  @GetMapping("/url/t1")        //GET http:/localhost:9080/test/url/t1
+  public String url_t1(){
+
+    return "test/url";
+  }
 }
