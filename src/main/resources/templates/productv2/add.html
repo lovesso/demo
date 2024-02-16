@@ -28,9 +28,9 @@
     <div><span class="err-msg" id="errGlobal"></span></div>
     <div>
       <label for="pname">상품명</label>
-      <input id="pname" name="pname" type="text" placeholder="영문/숫자/한글/_-가능">
+      <input id="pname" name="pname" type="text" placeholder="영문/숫자/한글/_-가능" th:value="${addForm.pname}">
       <span class="err-msg" id="errPname">11</span>
-      <span class="err-msg" th:text="${s_err_pname}"></span>
+      <span class="err-msg" th:if="${s_err_pname != ''}" th:class="'err-msg on'" th:text="${s_err_pname}"></span>
     </div>
     <div>
       <label for="quantity">수량</label>

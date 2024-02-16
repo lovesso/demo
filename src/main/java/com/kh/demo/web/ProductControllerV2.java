@@ -24,7 +24,8 @@ public class ProductControllerV2 {
 
   //상품등록양식
   @GetMapping("/add")         // Get, http://localhost:9080/products/add
-  public String addForm() {
+  public String addForm(Model model) {
+    model.addAttribute("addForm", new AddForm());
     return "productv2/add";     // view이름  상품등록화면
   }
 
@@ -38,11 +39,18 @@ public class ProductControllerV2 {
 
     log.info("addForm={}", addForm);
     //유효성체크
+    //필드 레벨
+    //1-1)상품명
     if(addForm.getPname().length() > 10){
-
+      model.addAttribute("addForm", addForm);
       model.addAttribute("s_err_pname","상품명은 10자 이내여야합니다.");
       return "productv2/add";
     }
+    //1-2)수량
+    
+    //1-3)가격
+    
+    //글로벌 레벨
 
     //상품등록
     Product product = new Product();
