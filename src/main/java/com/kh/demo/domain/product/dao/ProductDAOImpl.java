@@ -44,6 +44,7 @@ public class ProductDAOImpl implements ProductDAO{
     return product_id;
   }
 
+  //조회
   @Override
   public Optional<Product> findById(Long productId) {
     StringBuffer sql = new StringBuffer();

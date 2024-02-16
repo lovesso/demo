@@ -3,6 +3,7 @@ package com.kh.demo.web;
 import com.kh.demo.domain.entity.Product;
 import com.kh.demo.domain.product.svc.ProductSVC;
 import com.kh.demo.web.form.product.AddForm;
+import com.kh.demo.web.form.product.UpdateForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -132,16 +133,46 @@ public class ProductControllerV2 {
           //경로변수 pid로부터 상품번호을 읽어온다
           @PathVariable("pid") Long productId,
           //요청메세지 바디로부터 대응되는 상품정보를 읽어온다.
-          @RequestParam("pname") String pname,
-          @RequestParam("quantity") Long quantity,
-          @RequestParam("price") Long price,
+          UpdateForm updateForm,
           //리다이렉트시 경로변수에 값을 설정하기위해 사용
-          RedirectAttributes redirectAttributes){
+          RedirectAttributes redirectAttributes,
+          Model model){
 
+    //유효성체크
+    //필드 레벨
+    //1-1)상품명
+    String pattern = "^[a-zA-Z0-9가-힣_-]{3,10}$";
+    if (!Pattern.matches(pattern, updateForm.getPname())) {
+      model.addAttribute("product", updateForm);
+      model.addAttribute("s_err_pname","영문/숫자/한글/_-가능, 3~10자리");
+      return "productv2/updateForm";
+    }
+    //1-2)수량
+    pattern = "^\\d{1,10}$";
+    if (!Pattern.matches(pattern, String.valueOf(updateForm.getQuantity()))) {
+      model.addAttribute("product", updateForm);
+      model.addAttribute("s_err_quantity","숫자0~9사이 입력가능 1~10자리");
+      return "productv2/updateForm";
+    }
+    //1-3)가격
+    pattern = "^\\d{1,10}$";
+    if (!Pattern.matches(pattern, String.valueOf(updateForm.getPrice()))) {
+      model.addAttribute("product", updateForm);
+      model.addAttribute("s_err_price","숫자0~9사이 입력가능 1~10자리");
+      return "productv2/updateForm";
+    }
+    //글로벌 레벨
+    if(updateForm.getQuantity() * updateForm.getPrice() > 10_000_000){
+      model.addAttribute("product", updateForm);
+      model.addAttribute("s_err_global","총액 1000만원 초과합니다");
+      return "productv2/updateForm";
+    }
+
+    //정상처리
     Product product = new Product();
-    product.setPname(pname);
-    product.setQuantity(quantity);
-    product.setPrice(price);
+    product.setPname(updateForm.getPname());
+    product.setQuantity(updateForm.getQuantity());
+    product.setPrice(updateForm.getPrice());
     int updateRowCnt = productSVC.updateById(productId, product);
 
     redirectAttributes.addAttribute("pid",productId);
