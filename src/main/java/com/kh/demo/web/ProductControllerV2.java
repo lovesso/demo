@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Controller // Controller 역할을 하는 클래스
@@ -41,16 +42,32 @@ public class ProductControllerV2 {
     //유효성체크
     //필드 레벨
     //1-1)상품명
-    if(addForm.getPname().length() > 10){
+    String pattern = "^[a-zA-Z0-9가-힣_-]{3,10}$";
+    if (!Pattern.matches(pattern, addForm.getPname())) {
       model.addAttribute("addForm", addForm);
-      model.addAttribute("s_err_pname","상품명은 10자 이내여야합니다.");
+      model.addAttribute("s_err_pname","영문/숫자/한글/_-가능, 3~10자리");
       return "productv2/add";
     }
     //1-2)수량
-    
+    pattern = "^\\d{1,10}$";
+    if (!Pattern.matches(pattern, String.valueOf(addForm.getQuantity()))) {
+      model.addAttribute("addForm", addForm);
+      model.addAttribute("s_err_quantity","숫자0~9사이 입력가능 1~10자리");
+      return "productv2/add";
+    }
     //1-3)가격
-    
+    pattern = "^\\d{1,10}$";
+    if (!Pattern.matches(pattern, String.valueOf(addForm.getPrice()))) {
+      model.addAttribute("addForm", addForm);
+      model.addAttribute("s_err_price","숫자0~9사이 입력가능 1~10자리");
+      return "productv2/add";
+    }
     //글로벌 레벨
+    if(addForm.getQuantity() * addForm.getPrice() > 10_000_000){
+      model.addAttribute("addForm", addForm);
+      model.addAttribute("s_err_global","총액 1000만원 초과합니다");
+      return "productv2/add";
+    }
 
     //상품등록
     Product product = new Product();
