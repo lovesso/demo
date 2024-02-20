@@ -30,6 +30,7 @@
     <div>
       <label for="pname" th:text="#{label.product.pname}">상품명</label>
       <input id="pname" name="pname" type="text" placeholder="영문/숫자/한글/_-가능" th:value="*{pname}">
+
       <span class="err-msg" id="errPname">11</span>
       <span class="err-msg" th:if="${s_err_pname != ''}" th:class="'err-msg on'" th:text="${s_err_pname}"></span>
     </div>
@@ -87,6 +88,7 @@
         evt.target.select();
       }
     });
+
     price.addEventListener('blur',evt=>{
       evt.target.style.backgroundColor = 'initial';
       //유효성 체크

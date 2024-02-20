@@ -5,6 +5,7 @@ import com.kh.demo.domain.product.svc.ProductSVC;
 import com.kh.demo.web.form.product.AddForm;
 import com.kh.demo.web.form.product.UpdateForm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,10 @@ public class ProductControllerV2 {
   //상품등록처리
   @PostMapping("/add")        // Post, http://localhost:9080/products/add
   public String add(
-          AddForm addForm,    //form객체 : 양식과 매핑되는 객체
-          Model model,
-          RedirectAttributes redirectAttributes
-          ){
+      AddForm addForm,    //form객체 : 양식과 매핑되는 객체
+      Model model,
+      RedirectAttributes redirectAttributes
+  ){
 
     log.info("addForm={}", addForm);
     //유효성체크
@@ -95,14 +96,19 @@ public class ProductControllerV2 {
   }
 
   //단건삭제
-  @GetMapping("/{pid}/del")
-  public String deleteById(@PathVariable("pid") Long productId){
+  @ResponseBody   //응답 메세지 바디에 직접 작성
+  @DeleteMapping("/{pid}/del")
+  public ResponseEntity<?> deleteById(@PathVariable("pid") Long productId){
     log.info("deleteById={}",productId);
 
     //1)상품 삭제 -> 상품테이블에서 삭제
     int deletedRowCnt = productSVC.deleteById(productId);
-    
-    return "redirect:/products";     // GET http://localhost:9080/products/
+    if(deletedRowCnt == 1){
+      return ResponseEntity.ok().build(); //응답코드 200 OK
+    }else{
+      return ResponseEntity.notFound().build(); // 응답코드 404 NotFound
+    }
+    //return "redirect:/products";     // GET http://localhost:9080/products/
   }
 
   //여러건삭제
@@ -118,8 +124,8 @@ public class ProductControllerV2 {
   //수정양식
   @GetMapping("/{pid}/edit")      // GET http://locahost:9080/products/상품번호/edit
   public String updateForm(
-          @PathVariable("pid") Long productId,
-          Model model){
+      @PathVariable("pid") Long productId,
+      Model model){
 
     Optional<Product> optionalProduct = productSVC.findById(productId);
     Product findedProduct = optionalProduct.orElseThrow();
@@ -130,13 +136,13 @@ public class ProductControllerV2 {
   //수정 처리
   @PostMapping("/{pid}/edit")
   public String update(
-          //경로변수 pid로부터 상품번호을 읽어온다
-          @PathVariable("pid") Long productId,
-          //요청메세지 바디로부터 대응되는 상품정보를 읽어온다.
-          UpdateForm updateForm,
-          //리다이렉트시 경로변수에 값을 설정하기위해 사용
-          RedirectAttributes redirectAttributes,
-          Model model){
+      //경로변수 pid로부터 상품번호을 읽어온다
+      @PathVariable("pid") Long productId,
+      //요청메세지 바디로부터 대응되는 상품정보를 읽어온다.
+      UpdateForm updateForm,
+      //리다이렉트시 경로변수에 값을 설정하기위해 사용
+      RedirectAttributes redirectAttributes,
+      Model model){
 
     //유효성체크
     //필드 레벨
@@ -178,7 +184,7 @@ public class ProductControllerV2 {
     redirectAttributes.addAttribute("pid",productId);
     return "redirect:/products/{pid}/detail";
   }
-  
+
   //목록
   @GetMapping   // GET http://localhost:9080/products
   public String findAll(Model model){
