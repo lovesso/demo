@@ -22,7 +22,8 @@ class NaverNewsTest {
 
   @Test
   void reqNews() {
-    String data = news.reqNews();
+    String keyword = "LG화학";
+    String data = news.reqNews(keyword,10,10);
     log.info("data={}", data);
   }
 
