@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -125,5 +126,14 @@ public class ProductDAOImpl implements ProductDAO{
     List<Product> list = template.query(sql.toString(), BeanPropertyRowMapper.newInstance(Product.class));
 
     return list;
+  }
+
+  @Override
+  public int totalCnt() {
+    String sql = "select count(product_id) from product";
+
+    SqlParameterSource param = new MapSqlParameterSource();
+    Integer cnt = template.queryForObject(sql, Collections.emptyMap(), Integer.class);
+    return cnt;
   }
 }

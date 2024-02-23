@@ -13,10 +13,10 @@ public class StockPriceTest {
   @Autowired
   StockPrice stockPrice;
 
-  @Test
-  void getStockPrice(){
-    String data = stockPrice.reqStockPrice("SK하이닉스", "20240201", "20240221");
-    log.info("data={}", data);
-  }
+//  @Test
+//  void getStockPrice(){
+//    String data = stockPrice.reqStockPrice("SK하이닉스", "20240201", "20240221");
+//    log.info("data={}", data);
+//  }
 
 }

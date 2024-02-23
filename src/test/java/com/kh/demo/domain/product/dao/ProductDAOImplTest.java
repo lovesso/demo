@@ -95,4 +95,13 @@ class ProductDAOImplTest {
       Assertions.fail("변경할 상품이 없습니다");
     }
   }
+
+  @Test
+  @DisplayName("총레코드건수")
+  void totalCnt() {
+    int totalCnt = productDAO.totalCnt();
+    List<Product> list = productDAO.findAll();
+
+    Assertions.assertThat(totalCnt).isEqualTo(list.size());
+  }
 }

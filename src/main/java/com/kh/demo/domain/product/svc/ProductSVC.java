@@ -17,10 +17,14 @@ public interface ProductSVC {
 
   //여러건삭제
   int deleteByIds(List<Long> productIds);
-  
+
   //목록
   List<Product> findAll();
 
   //수정
   int updateById(Long productId, Product product);
+  //총레코드건수
+  int totalCnt();
 }
+
+
