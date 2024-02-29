@@ -21,12 +21,11 @@ public class ApiResponse<T> {
     this.body = body;
   }
 
-
   @Getter
   @ToString
   @AllArgsConstructor
   private static class Header {
-    String rtcd;   //rtce:응답코드
+    String rtcd;   //rtcd:응답코드
     String rtmsg;   //remsg: 응답메세지
     String rtdetail; //응답세무메세지
 

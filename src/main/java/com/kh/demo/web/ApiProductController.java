@@ -79,10 +79,10 @@ public class ApiProductController {
   //수정 --수정이 잘됐는지 안됐는지 응답해주기
   //@ResponseBody
   @PatchMapping("/{pid}")
-  public  ApiResponse<?> update(
+  public ApiResponse<?> update(
       @PathVariable("pid") Long pid,
       @RequestBody ReqUpdate reqUpdate
-  ){
+  ) {
     log.info("pid={}", pid);
     log.info("reqUpdate={}", reqUpdate);
 
@@ -94,13 +94,13 @@ public class ApiProductController {
 
     int updatedCnt = productSVC.updateById(pid, product);
     ApiResponse<ResUpdate> res = null;
-    if(updatedCnt == 1){
+    if (updatedCnt == 1) {
       ResUpdate resUpdate = new ResUpdate();
       BeanUtils.copyProperties(reqUpdate, resUpdate);
       resUpdate.setProductId(pid);
 
       res = ApiResponse.createApiResponse(ResCode.OK.getCode(), ResCode.OK.name(), resUpdate);
-    }else{
+    } else {
       res = ApiResponse.createApiResponse(ResCode.FAIL.getCode(), ResCode.FAIL.name(), null);
     }
 
@@ -127,6 +127,15 @@ public class ApiProductController {
   // @ResponseBody
   @GetMapping
   public ApiResponse<?> list() {
+
+
+    try {
+      Thread.sleep(3000); //3초 지연
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+
+
     List<Product> list = productSVC.findAll();
 
     ApiResponse<List<Product>> res = null;

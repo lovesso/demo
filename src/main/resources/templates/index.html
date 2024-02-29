@@ -7,11 +7,35 @@
   <title>초기화면(dynamic)</title>
 </head>
 <body>
-  <h3>Hello world~!(dynamic)</h3>
+<h3>Hello world~!(dynamic)</h3>
+<th:block th:if="${session.loginOK}">
+  <p th:text="${session.loginOK.nickname}"></p>
   <ul>
-    <li><a href="/products">상품관리</a></li>
+    <li><a href="/products">상품관리-SSR</a></li>
+    <li><a href="/api/view/products">상품관리-CSR</a></li>
     <li><a href="/pubdata/news">뉴스검색</a></li>
     <li><a href="/pubdata/stocks">주가시세조회</a></li>
+    <li><a href="#" id="logout">로그아웃</a></li>
   </ul>
+</th:block>
+<th:block th:unless="${session.loginOK}">
+  <ul>
+    <li><a href="/members/join">회원가입</a></li>
+    <li><a href="/login">로그인</a></li>
+  </ul>
+</th:block>
+<script>
+  logout.addEventListener('click',evt=>{
+    evt.preventDefault(); // 기본 이벤트 제거
+    fetch('/logout',{method:'POST',body:null})
+      .then(res=>res.text())
+      .then(res=>{
+        if(res==='OK'){
+          location.href='/';
+        }
+       })
+      .catch(console.log);
+  });
+</script>
 </body>
 </html>
